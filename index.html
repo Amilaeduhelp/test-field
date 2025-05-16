@@ -609,6 +609,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let activeLetterFilter = null;
     let currentMapKey = 'sl_al';
     const currentZoom = 1.0; // Fixed at 100% zoom
+	
     
     // Define maps with their URLs, places, and historical info
 const maps = {
@@ -1055,37 +1056,41 @@ const maps = {
                 
                 // Create identical button for floating panel
                 const floatingButton = document.createElement('button');
-                floatingButton.className = 'alphabet-button';
-                floatingButton.textContent = letter;
-                floatingButton.addEventListener('click', function() {
-                    filterByLetter(letter);
-                    // Hide floating panel when letter is selected
-                    floatingAlphabet.classList.remove('show');
-                    // Show place list
-                    placeListContainer.classList.remove('collapsed');
-                });
-                floatingAlphabetButtons.appendChild(floatingButton);
+floatingButton.className = 'alphabet-button';
+floatingButton.textContent = letter;
+floatingButton.addEventListener('click', function() {
+    filterByLetter(letter);
+    // Hide floating panel when letter is selected
+    floatingAlphabet.classList.remove('show');
+    
+    // Always show place list when a letter is selected from floating panel
+    placeListContainer.classList.remove('collapsed');
+});
+floatingAlphabetButtons.appendChild(floatingButton);
             }
         });
     }
     
-    // Filter places by starting letter
-    function filterByLetter(letter) {
-        if (activeLetterFilter === letter) {
-            // If clicking the active filter, clear it
-            activeLetterFilter = null;
-            displayPlaces(maps[currentMapKey].places);
-        } else {
-            // Set new filter
-            activeLetterFilter = letter;
-            // Filter places by letter
-            const filteredPlaces = maps[currentMapKey].places.filter(
-                place => place.name.charAt(0) === letter
-            );
-            displayPlaces(filteredPlaces);
-        }
-        updateAlphabetButtonsState();
+// Filter places by starting letter
+function filterByLetter(letter) {
+    if (activeLetterFilter === letter) {
+        // If clicking the active filter, clear it
+        activeLetterFilter = null;
+        displayPlaces(maps[currentMapKey].places);
+    } else {
+        // Set new filter
+        activeLetterFilter = letter;
+        // Filter places by letter
+        const filteredPlaces = maps[currentMapKey].places.filter(
+            place => place.name.charAt(0) === letter
+        );
+        displayPlaces(filteredPlaces);
     }
+    updateAlphabetButtonsState();
+    
+    // Always show the place list after filtering - මෙය එකතු කරන්න
+    placeListContainer.classList.remove('collapsed');
+}
 
     // Update the active state of alphabet buttons
     function updateAlphabetButtonsState() {
@@ -1125,23 +1130,30 @@ const maps = {
         mapDropdown.classList.toggle('show');
     });
     
-    // Handle dropdown item click events
-    mapDropdown.querySelectorAll('a').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const mapKey = this.getAttribute('data-value');
-            currentMapKey = mapKey;
-            
-            // Update both map title instances
-            mapTitle.textContent = maps[mapKey].displayName;
-            mapTitleInList.textContent = maps[mapKey].displayName;
-            
-            mapImage.src = maps[mapKey].url;
-            resetView();
-            createAlphabetButtons();
-            mapDropdown.classList.remove('show');
-        });
+// Handle dropdown item click events - මෙම කොටස හමු කරගෙන ඒ වෙනුවට පහත කෝඩ් භාවිතා කරන්න
+mapDropdown.querySelectorAll('a').forEach(item => {
+    item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const mapKey = this.getAttribute('data-value');
+        currentMapKey = mapKey;
+        
+        // Update both map title instances
+        mapTitle.textContent = maps[mapKey].displayName;
+        mapTitleInList.textContent = maps[mapKey].displayName;
+        
+        // Load the new map image
+        mapImage.src = maps[mapKey].url;
+        
+        // Reset view and create alphabet buttons for new map
+        resetView();
+        
+        // Show place list panel
+        placeListContainer.classList.remove('collapsed');
+        
+        // Close the dropdown
+        mapDropdown.classList.remove('show');
     });
+});
     
     // Close dropdown when clicking outside
     document.addEventListener('click', function(e) {
