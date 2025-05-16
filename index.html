@@ -5,525 +5,395 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ශ්‍රී ලංකා ඉතිහාසික සිතියම</title>
     <style>
-	body {
-    font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-}
+        body {
+            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-/* New information bar styling */
-.info-bar {
-    background-color: #d4edda;
-    color: #000000;
-    padding: 8px 15px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 20;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
-}
+        /* New information bar styling */
+        .info-bar {
+            background-color: #d4edda; /* Light green color */
+            color: #000000; /* Black text */
+            padding: 10px 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.info-bar-content {
-    flex-grow: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .info-bar-content {
+            flex-grow: 1;
+        }
 
-.info-bar-brand {
-    font-weight: bold;
-    margin-right: 15px;
-}
+        .info-bar-brand {
+            font-weight: bold;
+            margin-right: 15px;
+        }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: calc(100vh - 80px); /* Adjusted to accommodate both top and bottom bars */
-    margin-top: 40px; /* Adjusted for smaller top bar */
-    margin-bottom: 40px; /* Added space for footer */
-}
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: calc(100vh - 90px); /* Adjusted to accommodate both top and bottom bars */
+            margin-top: 50px; /* Added to accommodate the fixed info bar */
+            margin-bottom: 40px; /* Added space for footer */
+        }
 
-/* Map title in header */
-.map-title {
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 10px;
-    max-width: 200px;
-}
+        .place-list {
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
 
-/* Header controls */
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        /* Modified header styling to include dropdown */
+        .place-list-header {
+            color: #333;
+            border-bottom: 2px solid #8b4513;
+            padding-bottom: 10px;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
 
-/* Place list panel - default hidden on mobile */
-.place-list {
-    width: 250px;
-    background-color: #fff;
-    padding: 15px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-    height: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    z-index: 10;
-    transition: transform 0.3s ease, width 0.3s ease;
-}
+        .place-list-header-text {
+            font-weight: bold;
+            font-size: 1.5em;
+            margin: 0;
+        }
 
-/* Place list when collapsed */
-.place-list.collapsed {
-    width: 0;
-    padding: 0;
-    overflow: hidden;
-}
+        .dropdown-arrow {
+            margin-left: 10px;
+        }
 
-/* Responsive collapse toggle button */
-.toggle-list-button {
-    background-color: #114704;
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 16px;
-}
+        /* Custom dropdown styling */
+        .map-selector {
+            width: 100%;
+            position: relative;
+            margin-bottom: 15px;
+        }
 
-/* Alphabet toggle button */
-.alphabet-toggle {
-    background-color: #114704;
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .map-selector select {
+            padding: 8px 10px;
+            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            background-color: white;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
 
-.alphabet-toggle:hover, .toggle-list-button:hover {
-    background-color: #37960b;
-}
+        .map-selector:after {
+            content: '▼';
+            font-size: 0.8em;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
 
-.place-list-header {
-    color: #333;
-    border-bottom: 2px solid #8b4513;
-    padding-bottom: 10px;
-    margin-top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    user-select: none;
-}
+        .place-list ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
 
-.place-list-header-text {
-    font-weight: bold;
-    font-size: 1.2em;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .place-list li {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.dropdown-arrow {
-    margin-left: 10px;
-}
+        .place-list li:hover {
+            background-color: #f0f0f0;
+        }
 
-/* Custom dropdown styling */
-.map-selector {
-    width: 100%;
-    position: relative;
-    margin-bottom: 15px;
-}
+        .map-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: auto;
+            background-color: #ffffff;
+        }
 
-.map-selector select {
-    padding: 8px 10px;
-    font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-    background-color: white;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
+        .map-wrapper {
+            position: relative;
+            width: fit-content;
+            height: fit-content;
+            min-width: 100%;
+            min-height: 100%;
+        }
 
-.map-selector:after {
-    content: '▼';
-    font-size: 0.8em;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-}
+        .map-image {
+            display: block;
+        }
 
-.place-list ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-    overflow-y: auto;
-}
+        /* කුඩා කරන ලද ලකුණු කිරීමේ ලක්ෂ්‍යය */
+        .location-marker {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            pointer-events: none;
+        }
 
-.place-list li {
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        /* වඩා දුරට විහිදෙන රවුම */
+        .location-ring {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 4px solid red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            pointer-events: none;
+            animation: pulse 1s infinite;
+        }
 
-.place-list li:hover {
-    background-color: #f0f0f0;
-}
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.8);
+                opacity: 0;
+            }
+        }
 
-.map-container {
-    flex-grow: 1;
-    position: relative;
-    overflow: auto;
-    background-color: #ffffff;
-    transition: width 0.3s ease;
-}
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 25px;
+            pointer-events: none;
+            z-index: 6;
+            display: none;
+			transform: translateX(40px);
+        }
 
-.map-wrapper {
-    position: relative;
-    width: fit-content;
-    height: fit-content;
-    min-width: 100%;
-    min-height: 100%;
-}
+        .header {
+            background-color: #8b4513;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+        }
 
-.map-image {
-    display: block;
-    max-width: none;
-}
+        /* Active place highlight */
+        .place-list li.active {
+            background-color: #e0e0e0;
+            font-weight: bold;
+        }
 
-/* කුඩා කරන ලද ලකුණු කිරීමේ ලක්ෂ්‍යය */
-.location-marker {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    pointer-events: none;
-}
+        /* අකාරාදී බටන් සඳහා */
+        .alphabet-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
 
-/* වඩා දුරට විහිදෙන රවුම */
-.location-ring {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border: 4px solid red;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 4;
-    pointer-events: none;
-    animation: pulse 1s infinite;
-}
+        .alphabet-button {
+            background-color: #114704;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
+            font-size: 14px;
+            min-width: 30px;
+            text-align: center;
+        }
 
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1.8);
-        opacity: 0;
-    }
-}
+        .alphabet-button:hover {
+            background-color: #37960b;
+        }
 
-.tooltip {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 16px;
-    pointer-events: none;
-    z-index: 6;
-    display: none;
-    transform: translateX(20px);
-}
+        .alphabet-button.active {
+            background-color: #2c6809;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+        }
 
-/* Active place highlight */
-.place-list li.active {
-    background-color: #e0e0e0;
-    font-weight: bold;
-}
+        /* Show all button */
+        .show-all-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+            width: 100%;
+        }
 
-/* අකාරාදී බටන් සඳහා */
-.alphabet-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
-}
+        .show-all-button:hover {
+            background-color: #218838;
+        }
 
-.alphabet-button {
-    background-color: #114704;
-    color: white;
-    border: none;
-    padding: 5px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-    font-size: 12px;
-    min-width: 24px;
-    text-align: center;
-}
+        #backButton {
+            background-color: #8b4513;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
+            margin-bottom: 10px;
+            display: block;
+            width: 100%;
+        }
 
-.alphabet-button:hover {
-    background-color: #37960b;
-}
+        #backButton:hover {
+            background-color: #6b3209;
+        }
 
-.alphabet-button.active {
-    background-color: #2c6809;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-}
+        /* Footer styling - Fixed footer at bottom of page */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px; /* Fixed height */
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+            border-top: 1px solid #ddd;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20; /* Ensure it's above other elements */
+            font-size: 14px;
+            box-sizing: border-box;
+        }
 
-/* Show all button */
-.show-all-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-    font-size: 14px;
-    margin-bottom: 10px;
-    display: block;
-    width: 100%;
-}
+        .footer-brand {
+            font-weight: bold;
+        }
 
-.show-all-button:hover {
-    background-color: #218838;
-}
+        .footer-brand a {
+            color: #114704;
+            text-decoration: none;
+        }
 
-#backButton {
-    background-color: #8b4513;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-    margin-bottom: 10px;
-    display: block;
-    width: 100%;
-}
+        .footer-brand a:hover {
+            text-decoration: underline;
+        }
 
-#backButton:hover {
-    background-color: #6b3209;
-}
+        .footer-reset-button {
+            background-color: #b71a09;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
+        }
 
-/* Footer styling - Fixed footer at bottom of page */
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40px; /* Fixed height */
-    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
-    border-top: 1px solid #ddd;
-    padding: 8px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 20; /* Ensure it's above other elements */
-    font-size: 14px;
-    box-sizing: border-box;
-}
+        .footer-reset-button:hover {
+            background-color: #6b3209;
+        }
 
-.footer-brand {
-    font-weight: bold;
-}
+        /* dropdown menu style */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            width: 100%;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 25;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
 
-.footer-brand a {
-    color: #114704;
-    text-decoration: none;
-}
+        .dropdown-menu a {
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            color: black;
+            border-bottom: 1px solid #eee;
+        }
 
-.footer-brand a:hover {
-    text-decoration: underline;
-}
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
 
-.footer-reset-button {
-    background-color: #b71a09;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-}
+        .dropdown-menu.show {
+            display: block;
+        }
 
-.footer-reset-button:hover {
-    background-color: #6b3209;
-}
-
-/* dropdown menu style */
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    background-color: white;
-    width: 200px;
-    max-width: 90vw;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    z-index: 25;
-    border-radius: 4px;
-    margin-top: 5px;
-    right: 10px;
-}
-
-.dropdown-menu a {
-    padding: 10px 15px;
-    text-decoration: none;
-    display: block;
-    color: black;
-    border-bottom: 1px solid #eee;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
-/* Floating alphabet panel */
-.floating-alphabet {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border-radius: 6px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    padding: 15px;
-    z-index: 30;
-    max-width: 90vw;
-    max-height: 80vh;
-    overflow-y: auto;
-    display: none;
-}
-
-.floating-alphabet.show {
-    display: block;
-}
-
-.floating-alphabet .close-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: #333;
-}
-
-/* මීඩියා විමසුම් සඳහා - Mobile Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: row; /* Keep row direction even on mobile */
-        margin-top: 40px;
-        height: calc(100vh - 80px);
-    }
-    
-    .place-list {
-        position: absolute;
-        left: 0;
-        top: 40px;
-        bottom: 40px;
-        width: 80%;
-        max-width: 300px;
-        z-index: 15;
-        transform: translateX(-100%);
-        height: auto;
-    }
-    
-    .place-list.show {
-        transform: translateX(0);
-    }
-    
-    .map-container {
-        width: 100%;
-    }
-    
-    .alphabet-button {
-        min-width: 22px;
-        font-size: 11px;
-        padding: 4px;
-    }
-    
-    .map-title {
-        font-size: 12px;
-        max-width: 150px;
-    }
-    
-    .tooltip {
-        font-size: 14px;
-        padding: 5px 8px;
-    }
-}
+        /* මීඩියා විමසුම් සඳහා */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin-top: 50px; /* Adjusted for mobile */
+                height: calc(100vh - 90px); /* Adjusted for footer */
+            }
+            
+            .place-list {
+                width: 100%;
+                height: 50%;
+                min-height: 200px;
+            }
+            
+            .map-container {
+                height: 60%;
+            }
+            
+            /* Ensure footer is visible on mobile */
+            .footer {
+                height: 40px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Fixed top navigation bar -->
+    <!-- New info bar that stays fixed at the top -->
     <div class="info-bar">
-        <!-- Left side - Map title -->
-        <div class="map-title" id="currentMapName">උසස් පෙළ ලංකා සිතියම</div>
-        
-        <!-- Location info -->
-        <div class="info-bar-content" id="infoContent">ස්ථානයක් තෝරන්න</div>
-        
-        <!-- Right side - Controls -->
-        <div class="header-controls">
-            <!-- Alphabet button -->
-            <button class="alphabet-toggle" id="alphabetToggle">අ</button>
-            
-            <!-- Menu toggle button -->
-            <button class="toggle-list-button" id="toggleListButton">☰</button>
-        </div>
+        <div class="info-bar-content" id="infoContent">සැකසුම අමිල උඩවත්ත</div>
     </div>
 
     <div class="container">
-        <!-- Place list panel - fully collapsible -->
-        <div class="place-list collapsed" id="placeListContainer">
+        <div class="place-list">
             <!-- Replace the heading with a clickable header that shows current map -->
             <div class="place-list-header" id="mapSelectorHeader">
-                <div class="place-list-header-text" id="currentMapNameInList">උසස් පෙළ ලංකා සිතියම</div>
+                <div class="place-list-header-text" id="currentMapName">උසස් පෙළ ලංකා සිතියම</div>
                 <div class="dropdown-arrow">▼</div>
             </div>
             
@@ -559,14 +429,6 @@
         </div>
     </div>
     
-    <!-- Floating alphabet panel -->
-    <div class="floating-alphabet" id="floatingAlphabet">
-        <button class="close-button" id="closeFloatingAlphabet">×</button>
-        <div class="alphabet-buttons" id="floatingAlphabetButtons">
-            <!-- Will be populated with the same alphabet buttons -->
-        </div>
-    </div>
-    
     <!-- Fixed footer at bottom of page -->
     <div class="footer">
         <div class="footer-brand">
@@ -574,45 +436,34 @@
         </div>
         <button id="footerResetButton" class="footer-reset-button">Reset</button>
     </div>
- 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Main elements
-    const mapContainer = document.getElementById('mapContainer');
-    const mapWrapper = document.getElementById('mapWrapper');
-    const mapImage = document.getElementById('mapImage');
-    const placesList = document.getElementById('placesList');
-    const locationMarker = document.getElementById('locationMarker');
-    const locationRing = document.getElementById('locationRing');
-    const tooltip = document.getElementById('tooltip');
-    const footerResetButton = document.getElementById('footerResetButton');
-    const alphabetButtons = document.getElementById('alphabetButtons');
-    const floatingAlphabetButtons = document.getElementById('floatingAlphabetButtons');
-    const showAllButton = document.getElementById('showAllButton');
-    const infoContent = document.getElementById('infoContent');
-    const placeListContainer = document.getElementById('placeListContainer');
-    
-    // New UI elements
-    const toggleListButton = document.getElementById('toggleListButton');
-    const alphabetToggle = document.getElementById('alphabetToggle');
-    const floatingAlphabet = document.getElementById('floatingAlphabet');
-    const closeFloatingAlphabet = document.getElementById('closeFloatingAlphabet');
-    const mapTitle = document.getElementById('currentMapName');
-    const mapTitleInList = document.getElementById('currentMapNameInList');
-    
-    // Dropdown elements
-    const mapSelectorHeader = document.getElementById('mapSelectorHeader');
-    const mapDropdown = document.getElementById('mapDropdown');
-    
-    // State variables
-    let activePlace = null;
-    let activeLetterFilter = null;
-    let currentMapKey = 'sl_al';
-    const currentZoom = 1.0; // Fixed at 100% zoom
-	
-    
-    // Define maps with their URLs, places, and historical info
-const maps = {
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mapContainer = document.getElementById('mapContainer');
+            const mapWrapper = document.getElementById('mapWrapper');
+            const mapImage = document.getElementById('mapImage');
+            const placesList = document.getElementById('placesList');
+            const locationMarker = document.getElementById('locationMarker');
+            const locationRing = document.getElementById('locationRing');
+            const tooltip = document.getElementById('tooltip');
+            const footerResetButton = document.getElementById('footerResetButton');
+            const alphabetButtons = document.getElementById('alphabetButtons');
+            const showAllButton = document.getElementById('showAllButton');
+            const infoContent = document.getElementById('infoContent');
+            
+            // New elements for the dropdown
+            const mapSelectorHeader = document.getElementById('mapSelectorHeader');
+            const currentMapName = document.getElementById('currentMapName');
+            const mapDropdown = document.getElementById('mapDropdown');
+            
+            // State variables
+            let activePlace = null;
+            let activeLetterFilter = null;
+            let currentMapKey = 'sl_al';
+            const currentZoom = 1.0; // Fixed at 100% zoom
+            
+            // Define maps with their URLs, places, and historical info
+ const maps = {
                 sl_al: {
                     url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/001_2020_ලංකා-ඉතිහාසය-සිතියම2-01.jpg",
                     displayName: "උසස් පෙළ ලංකා සිතියම",
@@ -877,321 +728,282 @@ const maps = {
                     ]
                 }
             };
+            // Initialize map
+            mapImage.src = maps[currentMapKey].url;
+            populatePlacesList(maps[currentMapKey].places);
+            createAlphabetButtons();
+            
+            // Set map image size
+            mapImage.onload = function() {
+                // Set map dimensions at 100% (fixed)
+                mapWrapper.style.width = this.naturalWidth + 'px';
+                mapWrapper.style.height = this.naturalHeight + 'px';
+                
+                // Center the map in view
+                centerMapInView();
+            };
 
-    // Initialize map
-    mapImage.src = maps[currentMapKey].url;
-    populatePlacesList(maps[currentMapKey].places);
-    createAlphabetButtons();
-    
-    // Set map image size
-    mapImage.onload = function() {
-        // Set map dimensions at 100% (fixed)
-        mapWrapper.style.width = this.naturalWidth + 'px';
-        mapWrapper.style.height = this.naturalHeight + 'px';
-        
-        // Center the map in view
-        centerMapInView();
-    };
+            // Display places on the map
+            function displayPlaces(places) {
+                // Clear existing list items
+                placesList.innerHTML = '';
+                
+                // Sort places by name
+                places.sort((a, b) => a.name.localeCompare(b, 'si'));
+                
+              // Add each place to the list
+              places.forEach(place => {
+                  const listItem = document.createElement('li');
+                  listItem.textContent = place.name;
+                  listItem.addEventListener('click', function() {
+                      // Remove active class from all items
+                      const allItems = placesList.querySelectorAll('li');
+                      allItems.forEach(item => item.classList.remove('active'));
+                      
+                      // Add active class to clicked item
+                      this.classList.add('active');
+                      
+                      // Show marker and ring at place location
+                      const xPos = (place.xPercent / 100) * mapImage.width;
+                      const yPos = (place.yPercent / 100) * mapImage.height;
+                      
+                      showMarker(xPos, yPos, place.name, place.info);
+                      
+                      // Center the map on the marker
+                      centerMapOnPoint(xPos, yPos);
+                      
+                      // Update active place
+                      activePlace = place;
+                      
+                      // Hide all list items except the clicked one
+                      const placeListContainer = document.querySelector('.place-list');
+// Hide alphabet buttons
+document.getElementById('alphabetButtons').style.display = 'none';
+// Hide "Show All" button
+document.getElementById('showAllButton').style.display = 'none';
+                      // Add a "back" button to show all places again
+                      if (!document.getElementById('backButton')) {
+                          const backButton = document.createElement('button');
+                          backButton.id = 'backButton';
+                          backButton.className = 'show-all-button';
+                          backButton.textContent = 'අකාරාදිය අනුව තෝරන්න';
+                          backButton.addEventListener('click', function() {
+                              // Show alphabet buttons and show all button again
+                              document.getElementById('alphabetButtons').style.display = 'flex';
+                              document.getElementById('showAllButton').style.display = 'block';
+                              // Show all list items
+                              allItems.forEach(item => item.style.display = 'block');
+                              // Remove back button
+                              this.remove();
+                          });
+                          placeListContainer.insertBefore(backButton, placesList);
+                      }
+                      
+                      // Hide all list items except the clicked one
+                      allItems.forEach(item => {
+                          if (item !== this) {
+                              item.style.display = 'none';
+                          }
+                      });
+                  });
+                  placesList.appendChild(listItem);
+              });
+            }
 
-    // Display places on the map
-    function displayPlaces(places) {
-        // Clear existing list items
-        placesList.innerHTML = '';
-        
-        // Sort places by name
-        places.sort((a, b) => a.name.localeCompare(b, 'si'));
-        
-        // Add each place to the list
-        places.forEach(place => {
-            const listItem = document.createElement('li');
-            listItem.textContent = place.name;
-            listItem.addEventListener('click', function() {
-                // Remove active class from all items
+            // Show marker and ring at specified position
+            function showMarker(x, y, name, info) {
+                // Show the marker and ring
+                locationMarker.style.left = x + 'px';
+                locationMarker.style.top = y + 'px';
+                locationMarker.style.display = 'block';
+                
+                locationRing.style.left = x + 'px';
+                locationRing.style.top = y + 'px';
+                locationRing.style.display = 'block';
+                
+                // Update info content in the top bar
+                infoContent.textContent = info;
+                
+                // Show tooltip on hover
+                tooltip.textContent = name;
+                tooltip.style.left = (x + 15) + 'px';
+                tooltip.style.top = (y + 15) + 'px';
+                tooltip.style.display = 'block';
+            }
+
+            // Center map in view
+            function centerMapInView() {
+                const mapContainerWidth = mapContainer.clientWidth;
+                const mapContainerHeight = mapContainer.clientHeight;
+                const mapWidth = mapWrapper.clientWidth;
+                const mapHeight = mapWrapper.clientHeight;
+                
+                // Calculate scroll positions to center the map
+                const scrollLeft = (mapWidth - mapContainerWidth) / 2;
+                const scrollTop = (mapHeight - mapContainerHeight) / 2;
+                
+                // Set scroll positions
+                mapContainer.scrollLeft = scrollLeft;
+                mapContainer.scrollTop = scrollTop;
+            }
+
+            // Center map on a specific point
+            function centerMapOnPoint(x, y) {
+                const mapContainerWidth = mapContainer.clientWidth;
+                const mapContainerHeight = mapContainer.clientHeight;
+                
+                // Calculate scroll positions to center the point
+                const scrollLeft = x - (mapContainerWidth / 2);
+                const scrollTop = y - (mapContainerHeight / 2);
+                
+                // Set scroll positions with animation
+                mapContainer.scrollTo({
+                    left: scrollLeft,
+                    top: scrollTop,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Populate places list
+            function populatePlacesList(places) {
+                displayPlaces(places);
+            }
+
+            // Reset view and clear markers
+            function resetView() {
+                // Hide marker and ring
+                locationMarker.style.display = 'none';
+                locationRing.style.display = 'none';
+                tooltip.style.display = 'none';
+                
+                // Reset info content
+                infoContent.textContent = 'ස්ථානයක් තෝරන්න';
+                
+                // Center map in view
+                centerMapInView();
+                
+                // Clear active place
+                activePlace = null;
+                
+                // Remove active class from all list items
                 const allItems = placesList.querySelectorAll('li');
                 allItems.forEach(item => item.classList.remove('active'));
                 
-                // Add active class to clicked item
-                this.classList.add('active');
+                // Reset letter filter
+                activeLetterFilter = null;
+                updateAlphabetButtonsState();
                 
-                // Show marker and ring at place location
-                const xPos = (place.xPercent / 100) * mapImage.width;
-                const yPos = (place.yPercent / 100) * mapImage.height;
-                
-                showMarker(xPos, yPos, place.name, place.info);
-                
-                // Center the map on the marker
-                centerMapOnPoint(xPos, yPos);
-                
-                // Update active place
-                activePlace = place;
-                
-                // Hide the place list panel completely when a place is selected
-                placeListContainer.classList.add('collapsed');
-                
-                // Add active place style to info content
-                infoContent.classList.add('active-place');
-            });
-            placesList.appendChild(listItem);
-        });
-    }
-
-    // Show marker and ring at specified position
-    function showMarker(x, y, name, info) {
-        // Show the marker and ring
-        locationMarker.style.left = x + 'px';
-        locationMarker.style.top = y + 'px';
-        locationMarker.style.display = 'block';
-        
-        locationRing.style.left = x + 'px';
-        locationRing.style.top = y + 'px';
-        locationRing.style.display = 'block';
-        
-        // Update info content in the top bar
-        infoContent.textContent = info || name;
-        
-        // Show tooltip on hover
-        tooltip.textContent = name;
-        tooltip.style.left = (x + 15) + 'px';
-        tooltip.style.top = (y + 15) + 'px';
-        tooltip.style.display = 'block';
-    }
-
-    // Center map in view
-    function centerMapInView() {
-        const mapContainerWidth = mapContainer.clientWidth;
-        const mapContainerHeight = mapContainer.clientHeight;
-        const mapWidth = mapWrapper.clientWidth;
-        const mapHeight = mapWrapper.clientHeight;
-        
-        // Calculate scroll positions to center the map
-        const scrollLeft = (mapWidth - mapContainerWidth) / 2;
-        const scrollTop = (mapHeight - mapContainerHeight) / 2;
-        
-        // Set scroll positions
-        mapContainer.scrollLeft = scrollLeft;
-        mapContainer.scrollTop = scrollTop;
-    }
-
-    // Center map on a specific point
-    function centerMapOnPoint(x, y) {
-        const mapContainerWidth = mapContainer.clientWidth;
-        const mapContainerHeight = mapContainer.clientHeight;
-        
-        // Calculate scroll positions to center the point
-        const scrollLeft = x - (mapContainerWidth / 2);
-        const scrollTop = y - (mapContainerHeight / 2);
-        
-        // Set scroll positions with animation
-        mapContainer.scrollTo({
-            left: scrollLeft,
-            top: scrollTop,
-            behavior: 'smooth'
-        });
-    }
-
-    // Populate places list
-    function populatePlacesList(places) {
-        displayPlaces(places);
-    }
-
-    // Reset view and clear markers
-    function resetView() {
-        // Hide marker and ring
-        locationMarker.style.display = 'none';
-        locationRing.style.display = 'none';
-        tooltip.style.display = 'none';
-        
-        // Reset info content
-        infoContent.textContent = 'ස්ථානයක් තෝරන්න';
-        infoContent.classList.remove('active-place');
-        
-        // Center map in view
-        centerMapInView();
-        
-        // Clear active place
-        activePlace = null;
-        
-        // Remove active class from all list items
-        const allItems = placesList.querySelectorAll('li');
-        allItems.forEach(item => item.classList.remove('active'));
-        
-        // Reset letter filter
-        activeLetterFilter = null;
-        updateAlphabetButtonsState();
-        
-        // Show all places
-        displayPlaces(maps[currentMapKey].places);
-    }
-
-    // Create alphabet filter buttons
-    function createAlphabetButtons() {
-        // Clear existing buttons
-        alphabetButtons.innerHTML = '';
-        floatingAlphabetButtons.innerHTML = '';
-        
-        // Create array of Sinhala alphabet
-        const sinhalaAlphabet = [
-            'අ', 'ආ', 'ඇ', 'ඈ', 'ඉ', 'ඊ', 'උ', 'ඌ', 'එ', 'ඒ', 'ඔ', 'ඕ',
-            'ක', 'ඛ', 'ග', 'ඝ', 'ඞ', 'ච', 'ඡ', 'ජ', 'ඣ', 'ඤ', 'ට',
-            'ඩ', 'ණ', 'ත', 'ථ', 'ද', 'ධ', 'න', 'ප', 'ඵ', 'බ', 'භ', 'ම',
-            'ය', 'ර', 'ල', 'ව', 'ශ', 'ෂ', 'ස', 'හ', 'ළ'
-        ];
-        
-        // Get all place names from the current map
-        const places = maps[currentMapKey].places;
-        const firstLetters = places.map(place => place.name.charAt(0));
-        
-        // Create a button for each letter in the Sinhala alphabet (both for sidebar and floating panel)
-        sinhalaAlphabet.forEach(letter => {
-            // Only create a button if there's at least one place starting with this letter
-            if (firstLetters.some(firstLetter => firstLetter === letter)) {
-                // Create button for sidebar
-                const button = document.createElement('button');
-                button.className = 'alphabet-button';
-                button.textContent = letter;
-                button.addEventListener('click', function() {
-                    filterByLetter(letter);
-                });
-                alphabetButtons.appendChild(button);
-                
-                // Create identical button for floating panel
-                const floatingButton = document.createElement('button');
-floatingButton.className = 'alphabet-button';
-floatingButton.textContent = letter;
-floatingButton.addEventListener('click', function() {
-    filterByLetter(letter);
-    // Hide floating panel when letter is selected
-    floatingAlphabet.classList.remove('show');
-    
-    // Always show place list when a letter is selected from floating panel
-    placeListContainer.classList.remove('collapsed');
-});
-floatingAlphabetButtons.appendChild(floatingButton);
+                // Show all places
+                displayPlaces(maps[currentMapKey].places);
             }
-        });
-    }
-    
-// Filter places by starting letter
-function filterByLetter(letter) {
-    if (activeLetterFilter === letter) {
-        // If clicking the active filter, clear it
-        activeLetterFilter = null;
-        displayPlaces(maps[currentMapKey].places);
-    } else {
-        // Set new filter
-        activeLetterFilter = letter;
-        // Filter places by letter
-        const filteredPlaces = maps[currentMapKey].places.filter(
-            place => place.name.charAt(0) === letter
-        );
-        displayPlaces(filteredPlaces);
-    }
-    updateAlphabetButtonsState();
-    
-    // Always show the place list after filtering - මෙය එකතු කරන්න
-    placeListContainer.classList.remove('collapsed');
-}
 
-    // Update the active state of alphabet buttons
-    function updateAlphabetButtonsState() {
-        const updateButtons = (container) => {
-            const buttons = container.querySelectorAll('.alphabet-button');
-            buttons.forEach(button => {
-                if (button.textContent === activeLetterFilter) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
+            // Create alphabet filter buttons
+            function createAlphabetButtons() {
+                // Clear existing buttons
+                alphabetButtons.innerHTML = '';
+                
+                // Create array of Sinhala alphabet
+                const sinhalaAlphabet = [
+                    'අ', 'ආ', 'ඇ', 'ඈ', 'ඉ', 'ඊ', 'උ', 'ඌ', 'එ', 'ඒ', 'ඔ', 'ඕ',
+                    'ක', 'ඛ', 'ග', 'ඝ', 'ඞ', 'ච', 'ඡ', 'ජ', 'ඣ', 'ඤ', 'ට',
+                    'ඩ', 'ණ', 'ත', 'ථ', 'ද', 'ධ', 'න', 'ප', 'ඵ', 'බ', 'භ', 'ම',
+                    'ය', 'ර', 'ල', 'ව', 'ශ', 'ෂ', 'ස', 'හ', 'ළ'
+                ];
+                
+                // Get all place names from the current map
+                const places = maps[currentMapKey].places;
+                const firstLetters = places.map(place => place.name.charAt(0));
+                
+                // Create a button for each letter in the Sinhala alphabet
+                sinhalaAlphabet.forEach(letter => {
+                    // Only create a button if there's at least one place starting with this letter
+                    if (firstLetters.some(firstLetter => firstLetter === letter)) {
+                        const button = document.createElement('button');
+                        button.className = 'alphabet-button';
+                        button.textContent = letter;
+                        button.addEventListener('click', function() {
+                            if (activeLetterFilter === letter) {
+                                // If clicking the active filter, clear it
+                                activeLetterFilter = null;
+                                displayPlaces(maps[currentMapKey].places);
+                            } else {
+                                // Set new filter
+                                activeLetterFilter = letter;
+                                // Filter places by letter
+                                const filteredPlaces = maps[currentMapKey].places.filter(
+                                    place => place.name.charAt(0) === letter
+                                );
+                                displayPlaces(filteredPlaces);
+                            }
+                            updateAlphabetButtonsState();
+                        });
+                        alphabetButtons.appendChild(button);
+                    }
+                });
+            }
+
+            // Update the active state of alphabet buttons
+            function updateAlphabetButtonsState() {
+                const buttons = alphabetButtons.querySelectorAll('.alphabet-button');
+                buttons.forEach(button => {
+                    if (button.textContent === activeLetterFilter) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            }
+
+            // Event listeners - CHANGE THIS SECTION TO USE DROPDOWN INSTEAD OF SELECT ELEMENT
+            mapSelectorHeader.addEventListener('click', function() {
+                mapDropdown.classList.toggle('show');
+            });
+            
+            // Handle dropdown item click events
+            mapDropdown.querySelectorAll('a').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const mapKey = this.getAttribute('data-value');
+                    currentMapKey = mapKey;
+                    currentMapName.textContent = maps[mapKey].displayName;
+                    mapImage.src = maps[mapKey].url;
+                    resetView();
+                    createAlphabetButtons();
+                    mapDropdown.classList.remove('show');
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!mapSelectorHeader.contains(e.target) && !mapDropdown.contains(e.target)) {
+                    mapDropdown.classList.remove('show');
                 }
             });
-        };
-        
-        // Update both sidebar and floating panel buttons
-        updateButtons(alphabetButtons);
-        updateButtons(floatingAlphabetButtons);
-    }
 
-    // Toggle place list visibility
-    toggleListButton.addEventListener('click', function() {
-        placeListContainer.classList.toggle('collapsed');
-    });
-    
-    // Toggle floating alphabet panel
-    alphabetToggle.addEventListener('click', function() {
-        floatingAlphabet.classList.toggle('show');
-    });
-    
-    // Close floating alphabet panel
-    closeFloatingAlphabet.addEventListener('click', function() {
-        floatingAlphabet.classList.remove('show');
-    });
+            footerResetButton.addEventListener('click', resetView);
 
-    // Handle dropdown for map selection
-    mapSelectorHeader.addEventListener('click', function() {
-        mapDropdown.classList.toggle('show');
-    });
-    
-// Handle dropdown item click events - මෙම කොටස හමු කරගෙන ඒ වෙනුවට පහත කෝඩ් භාවිතා කරන්න
-mapDropdown.querySelectorAll('a').forEach(item => {
-    item.addEventListener('click', function(e) {
-        e.preventDefault();
-        const mapKey = this.getAttribute('data-value');
-        currentMapKey = mapKey;
-        
-        // Update both map title instances
-        mapTitle.textContent = maps[mapKey].displayName;
-        mapTitleInList.textContent = maps[mapKey].displayName;
-        
-        // Load the new map image
-        mapImage.src = maps[mapKey].url;
-        
-        // Reset view and create alphabet buttons for new map
-        resetView();
-        
-        // Show place list panel
-        placeListContainer.classList.remove('collapsed');
-        
-        // Close the dropdown
-        mapDropdown.classList.remove('show');
-    });
-});
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!mapSelectorHeader.contains(e.target) && !mapDropdown.contains(e.target)) {
-            mapDropdown.classList.remove('show');
-        }
-        
-        // Also close floating alphabet panel when clicking outside
-        if (!alphabetToggle.contains(e.target) && !floatingAlphabet.contains(e.target)) {
-            floatingAlphabet.classList.remove('show');
-        }
-    });
+            showAllButton.addEventListener('click', function() {
+                // Clear letter filter
+                activeLetterFilter = null;
+                updateAlphabetButtonsState();
+                
+                // Show all places
+                displayPlaces(maps[currentMapKey].places);
+            });
 
-    footerResetButton.addEventListener('click', resetView);
+            // Hide tooltip when mouse leaves map container
+            mapContainer.addEventListener('mouseleave', function() {
+                if (!activePlace) {
+                    tooltip.style.display = 'none';
+                }
+            });
 
-    showAllButton.addEventListener('click', function() {
-        // Clear letter filter
-        activeLetterFilter = null;
-        updateAlphabetButtonsState();
-        
-        // Show all places
-        displayPlaces(maps[currentMapKey].places);
-    });
-
-    // Hide tooltip when mouse leaves map container
-    mapContainer.addEventListener('mouseleave', function() {
-        if (!activePlace) {
-            tooltip.style.display = 'none';
-        }
-    });
-
-    // Initial setup
-    resetView();
-    
-    // Set initial map name in headers
-    mapTitle.textContent = maps[currentMapKey].displayName;
-    mapTitleInList.textContent = maps[currentMapKey].displayName;
-});
-</script>
+            // Initial setup
+            resetView();
+            
+            // Set initial map name in header
+            currentMapName.textContent = maps[currentMapKey].displayName;
+        });
+    </script>
 </body>
 </html>
