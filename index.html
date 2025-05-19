@@ -17,9 +17,9 @@
         }
 
         .info-bar {
-            background-color: #d4edda; /* Light green color */
-            color: #000000; /* Black text */
-            padding: 10px 15px;
+            background-color: #d4edda;
+            color: #000000;
+            padding: 8px 15px; /* Adjusted padding */
             position: fixed;
             top: 0;
             left: 0;
@@ -33,110 +33,155 @@
 
         .info-bar-content {
             flex-grow: 1;
+            font-size: 0.9em;
+        }
+        
+        #togglePlaceListButton {
+            background-color: #114704;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        #togglePlaceListButton:hover {
+            background-color: #2c6809;
         }
 
-        .info-bar-brand {
-            font-weight: bold;
-            margin-right: 15px;
-        }
 
-        .container {
+        .container { /* This will now primarily hold the map */
             display: flex;
-            flex-direction: row;
+            flex-direction: column; /* Map container will take full space */
             width: 100%;
-            height: calc(100vh - 90px); 
-            margin-top: 50px; 
-            margin-bottom: 40px; 
+            height: calc(100vh - 70px); /* Adjusted for new info-bar (approx 30px) and footer (40px) heights */
+            margin-top: 35px; /* Approximate height of info-bar */
+            margin-bottom: 40px; /* Space for footer */
+        }
+        
+        /* POPUP STYLES for .place-list */
+        .place-list {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            max-width: 450px; /* Max width for the popup */
+            height: 85vh;
+            max-height: 600px; /* Max height for the popup */
+            background-color: #fff;
+            padding: 0; /* Padding will be on inner content */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            z-index: 100;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            overflow: hidden; /* Scroll will be on an inner div */
         }
 
-        .place-list {
-            width: 300px;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        .place-list.visible {
+            display: flex;
+        }
+        
+        .place-list-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            background-color: #f0f0f0;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .place-list-popup-header .place-list-header-text { /* Re-styling for popup context */
+             font-size: 1.2em;
+             font-weight: bold;
+        }
+         .place-list-popup-header .dropdown-arrow {
+            cursor: pointer;
+         }
+
+
+        #closePopupButton {
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+        #closePopupButton:hover {
+            color: #000;
+        }
+
+        .place-list-content-wrapper { /* New wrapper for scrolling content */
+            padding: 15px;
             overflow-y: auto;
-            height: 100%;
-            box-sizing: border-box;
+            flex-grow: 1; /* Takes remaining space in the flex column of .place-list */
             display: flex;
             flex-direction: column;
-            z-index: 10;
         }
 
-        .place-list-header {
+
+        /* Modified header styling to include dropdown - now inside popup header */
+        .place-list-header { /* This will now be part of place-list-popup-header for map name */
             color: #333;
-            border-bottom: 2px solid #8b4513;
-            padding-bottom: 10px;
+            /* border-bottom: 2px solid #8b4513; */ /* Handled by popup header border */
+            /* padding-bottom: 10px; */
             margin-top: 0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-between; /* For map name and arrow */
             cursor: pointer;
             user-select: none;
+            flex-grow: 1; /* Takes space next to close button */
         }
 
-        .place-list-header-text {
-            font-weight: bold;
-            font-size: 1.5em;
-            margin: 0;
-        }
-
-        .dropdown-arrow {
-            margin-left: 10px;
-        }
-
-        .map-selector {
-            width: 100%;
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .map-selector select {
-            padding: 8px 10px;
-            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 100%;
+        /* Dropdown menu relative to the popup */
+        .dropdown-menu {
+            display: none;
+            position: absolute; /* Relative to .place-list or its header part */
             background-color: white;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
+            /* width: 100%; */ /* Adjust width as needed, maybe not full width of popup */
+            width: calc(100% - 30px); /* Match padding of content wrapper */
+            left: 15px; /* Align with content padding */
+            top: 50px; /* Position below the popup header */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 105; /* Above popup content but can be tricky */
+            border-radius: 4px;
+            margin-top: 0px;
         }
 
-        .map-selector:after {
-            content: '▼';
-            font-size: 0.8em;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
 
-        .place-list ul {
+        .place-list ul { /* #placesList */
             list-style-type: none;
             padding: 0;
             margin: 0;
-            flex-grow: 1;
-            overflow-y: auto;
+            flex-grow: 1; /* To take space within .place-list-content-wrapper */
+            overflow-y: auto; /* If list itself is very long and other elements are fixed above it */
         }
 
         .place-list li {
-            padding: 10px 15px;
+            padding: 8px 10px; /* Slightly reduced padding */
             border-bottom: 1px solid #eee;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-size: 0.95em;
         }
 
         .place-list li:hover {
             background-color: #f0f0f0;
         }
 
-        .map-container {
+        .map-container { /* Will take full space of .container */
             flex-grow: 1;
             position: relative;
             overflow: auto;
             background-color: #ffffff;
+            height: 100%; /* Ensure it fills the container */
         }
 
         .map-wrapper {
@@ -151,133 +196,65 @@
             display: block;
         }
 
-        .location-marker {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: red;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 5;
-            pointer-events: none;
+        .location-marker, .location-ring, .tooltip /* Unchanged */ {
+            /* ... existing styles ... */
         }
+        .location-marker { position: absolute; width: 10px; height: 10px; background-color: red; border-radius: 50%; transform: translate(-50%, -50%); z-index: 5; pointer-events: none; }
+        .location-ring { position: absolute; width: 80px; height: 80px; border: 4px solid red; border-radius: 50%; transform: translate(-50%, -50%); z-index: 4; pointer-events: none; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
+        .tooltip { position: absolute; background-color: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 4px; font-size: 25px; pointer-events: none; z-index: 6; display: none; transform: translateX(40px); }
 
-        .location-ring {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            border: 4px solid red;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 4;
-            pointer-events: none;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1.8);
-                opacity: 0;
-            }
-        }
-
-        .tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 25px;
-            pointer-events: none;
-            z-index: 6;
-            display: none;
-			transform: translateX(40px);
-        }
-
-        .header {
-            background-color: #8b4513;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            width: 100%;
-        }
 
         .place-list li.active {
             background-color: #e0e0e0;
             font-weight: bold;
         }
 
+        /* Alphabet buttons and Show All button inside the popup content wrapper */
         .alphabet-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            padding: 10px 0;
+            gap: 3px; /* Adjusted gap */
+            padding: 8px 0; /* Adjusted padding */
             border-bottom: 1px solid #ddd;
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* Adjusted margin */
         }
 
         .alphabet-button {
             background-color: #114704;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 4px 8px; /* Adjusted padding */
             border-radius: 3px;
             cursor: pointer;
             font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-            font-size: 14px;
-            min-width: 30px;
+            font-size: 12px; /* Adjusted font size */
+            min-width: 28px; /* Adjusted min-width */
             text-align: center;
         }
+        .alphabet-button:hover { background-color: #37960b; }
+        .alphabet-button.active { background-color: #2c6809; box-shadow: 0 0 3px rgba(0,0,0,0.3); }
 
-        .alphabet-button:hover {
-            background-color: #37960b;
-        }
 
-        .alphabet-button.active {
-            background-color: #2c6809;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-        }
-
-        .show-all-button {
+        .show-all-button, #backButton { /* Common styling for these buttons inside popup */
             background-color: #28a745;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 10px; /* Adjusted padding */
             border-radius: 3px;
             cursor: pointer;
             font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 13px; /* Adjusted font size */
+            margin-bottom: 8px; /* Adjusted margin */
             display: block;
             width: 100%;
         }
+        .show-all-button:hover, #backButton:hover { background-color: #218838; }
+        #backButton { background-color: #8b4513; }
+        #backButton:hover { background-color: #6b3209; }
 
-        .show-all-button:hover {
-            background-color: #218838;
-        }
 
-        #backButton {
-            background-color: #8b4513;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-            margin-bottom: 10px;
-            display: block;
-            width: 100%;
-        }
-
-        #backButton:hover {
-            background-color: #6b3209;
-        }
-
-        .footer {
+        .footer { /* Unchanged, but ensure z-index is lower than popup */
             position: fixed;
             bottom: 0;
             left: 0;
@@ -289,123 +266,40 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 20; 
+            z-index: 19; /* Lower than popup's z-index */
             font-size: 14px;
             box-sizing: border-box;
         }
+        .footer-brand { font-weight: bold; }
+        .footer-brand a { color: #114704; text-decoration: none; }
+        .footer-brand a:hover { text-decoration: underline; }
+        .footer-reset-button { background-color: #b71a09; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif; }
+        .footer-reset-button:hover { background-color: #6b3209; }
 
-        .footer-brand {
-            font-weight: bold;
-        }
+        .dropdown-menu a { padding: 10px 15px; text-decoration: none; display: block; color: black; border-bottom: 1px solid #eee; }
+        .dropdown-menu a:hover { background-color: #f1f1f1; }
+        .dropdown-menu.show { display: block; }
 
-        .footer-brand a {
-            color: #114704;
-            text-decoration: none;
-        }
 
-        .footer-brand a:hover {
-            text-decoration: underline;
-        }
-
-        .footer-reset-button {
-            background-color: #b71a09;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Arial Unicode MS', 'Iskoola Pota', Arial, sans-serif;
-        }
-
-        .footer-reset-button:hover {
-            background-color: #6b3209;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background-color: white;
-            width: 100%;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            z-index: 25;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-
-        .dropdown-menu a {
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            color: black;
-            border-bottom: 1px solid #eee;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-
-        /* මීඩියා විමසුම් සඳහා - යාවත්කාලීන කළ කොටස */
+        /* මීඩියා විමසුම් සඳහා - Popup is inherently mobile-friendly */
         @media (max-width: 768px) {
-            .info-bar { 
-                padding: 5px 15px; 
+            .info-bar-content {
+                font-size: 0.8em; /* Smaller text on mobile info bar */
+            }
+             #togglePlaceListButton {
+                padding: 5px 10px;
+                font-size: 0.8em;
             }
 
-            .container {
-                flex-direction: column;
-                margin-top: 30px; 
-                height: calc(100vh - 60px); 
+            .place-list { /* Popup adjustments for smaller screens if needed */
+                width: 95vw;
+                height: 90vh;
             }
-            
-            .place-list {
-                width: 100%;
-                height: 30%; /* ස්ථාන ලැයිස්තුවට මඳක් වැඩි උසක් */
-                min-height: 120px; /* අවම උස මඳක් වැඩි කිරීම */
-                padding: 10px; /* Padding අඩු කිරීම */
-                overflow-y: auto; /* මෙය ඉතා වැදගත් - සම්පූර්ණ place-list එක scroll වීමට */
+            .place-list-popup-header .place-list-header-text {
+                 font-size: 1.1em;
             }
-
-            .place-list-header {
-                padding-bottom: 5px; 
-            }
-            .place-list-header-text {
-                font-size: 1.2em; /* අකුරු ප්‍රමාණය අඩු කිරීම */
-            }
-
-            .alphabet-buttons {
-                padding: 5px 0; 
-                gap: 3px; 
-                margin-bottom: 5px; 
-            }
-            .alphabet-button {
-                padding: 3px 6px; 
-                font-size: 12px; 
-                min-width: 25px;
-            }
-
-            .show-all-button {
-                padding: 4px 8px; 
-                font-size: 12px; 
-                margin-bottom: 5px; 
-            }
-             /* #backButton සඳහා ද මෙම .show-all-button style බලපානු ඇත */
-            
-            .place-list ul { /* ul#placesList */
-                flex-grow: 0;  /* ස්ථාන ලැයිස්තුවට එහි සම්පූර්ණ අන්තර්ගත උස ගැනීමට ඉඩ දීම */
-                flex-shrink: 0; /* හැකිළීම වැලැක්වීම */
-                /* overflow-y: auto; තවමත් තිබීම ගැටළුවක් නැත, එයට ස්ථිර උසක් ලැබුනොත් ක්‍රියාත්මක වේවි */
-            }
-
-            .map-container {
-                height: 70%; /* place-list එකට 30% දුන් නිසා map එකට 70% */
-            }
-            
-            .footer {
-                height: 30px; 
-                padding: 5px 15px; 
+            .dropdown-menu {
+                /* top: 45px; */ /* Adjust if header height changes on mobile */
             }
         }
     </style>
@@ -413,32 +307,10 @@
 <body>
     <div class="info-bar">
         <div class="info-bar-content" id="infoContent">සැකසුම අමිල උඩවත්ත</div>
+        <button id="togglePlaceListButton">ස්ථාන ලැයිස්තුව</button>
     </div>
 
     <div class="container">
-        <div class="place-list">
-            <div class="place-list-header" id="mapSelectorHeader">
-                <div class="place-list-header-text" id="currentMapName">උසස් පෙළ ලංකා සිතියම</div>
-                <div class="dropdown-arrow">▼</div>
-            </div>
-            
-            <div class="dropdown-menu" id="mapDropdown">
-                <a href="#" data-value="sl_al">උසස් පෙළ ලංකා සිතියම</a>
-                <a href="#" data-value="india_al">උසස් පෙළ ඉන්දියා සිතියම</a>
-                <a href="#" data-value="europe_al">උසස් පෙළ යුරෝපා සිතියම</a>
-                <a href="#" data-value="sl_ol">සාමාන්‍ය පෙළ ලංකා සිතියම</a>
-                <a href="#" data-value="eurasia_ol">සාමාන්‍ය පෙළ යුරේසියා සිතියම</a>
-            </div>
-            
-            <div class="alphabet-buttons" id="alphabetButtons">
-                </div>
-            
-            <button id="showAllButton" class="show-all-button">සියලුම ස්ථාන</button>
-            
-            <ul id="placesList">
-                </ul>
-        </div>
-        
         <div class="map-container" id="mapContainer">
             <div class="map-wrapper" id="mapWrapper">
                 <img src="https://www.eduhelp.lk/wp-content/uploads/2025/05/001_2020_ලංකා-ඉතිහාසය-සිතියම2-01.jpg" alt="සිතියම" class="map-image" id="mapImage">
@@ -446,6 +318,31 @@
                 <div id="locationRing" class="location-ring" style="display: none;"></div>
                 <div id="tooltip" class="tooltip"></div>
             </div>
+        </div>
+    </div>
+    
+    <div class="place-list" id="placeListPopup">
+        <div class="place-list-popup-header">
+            <div class="place-list-header" id="mapSelectorHeader">
+                <div class="place-list-header-text" id="currentMapName">උසස් පෙළ ලංකා සිතියම</div>
+                <div class="dropdown-arrow">▼</div>
+            </div>
+            <button id="closePopupButton" title="Close">&times;</button>
+        </div>
+        <div class="dropdown-menu" id="mapDropdown">
+            <a href="#" data-value="sl_al">උසස් පෙළ ලංකා සිතියම</a>
+            <a href="#" data-value="india_al">උසස් පෙළ ඉන්දියා සිතියම</a>
+            <a href="#" data-value="europe_al">උසස් පෙළ යුරෝපා සිතියම</a>
+            <a href="#" data-value="sl_ol">සාමාන්‍ය පෙළ ලංකා සිතියම</a>
+            <a href="#" data-value="eurasia_ol">සාමාන්‍ය පෙළ යුරේසියා සිතියම</a>
+        </div>
+
+        <div class="place-list-content-wrapper">
+            <div class="alphabet-buttons" id="alphabetButtons">
+                </div>
+            <button id="showAllButton" class="show-all-button">සියලුම ස්ථාන</button>
+            <ul id="placesList">
+                </ul>
         </div>
     </div>
     
@@ -461,7 +358,13 @@
             const mapContainer = document.getElementById('mapContainer');
             const mapWrapper = document.getElementById('mapWrapper');
             const mapImage = document.getElementById('mapImage');
-            const placesList = document.getElementById('placesList');
+            
+            // Place List Popup elements
+            const placeListPopup = document.getElementById('placeListPopup'); // The main popup div
+            const placesListUL = document.getElementById('placesList'); // The UL for place names
+            const togglePlaceListButton = document.getElementById('togglePlaceListButton');
+            const closePopupButton = document.getElementById('closePopupButton');
+
             const locationMarker = document.getElementById('locationMarker');
             const locationRing = document.getElementById('locationRing');
             const tooltip = document.getElementById('tooltip');
@@ -470,105 +373,42 @@
             const showAllButton = document.getElementById('showAllButton');
             const infoContent = document.getElementById('infoContent');
             
-            const mapSelectorHeader = document.getElementById('mapSelectorHeader');
-            const currentMapName = document.getElementById('currentMapName');
-            const mapDropdown = document.getElementById('mapDropdown');
-            
+            const mapSelectorHeader = document.getElementById('mapSelectorHeader'); // Inside popup
+            const currentMapName = document.getElementById('currentMapName');     // Inside popup
+            const mapDropdown = document.getElementById('mapDropdown');           // Inside popup
+
             let activePlace = null;
             let activeLetterFilter = null;
             let currentMapKey = 'sl_al';
-            const currentZoom = 1.0; 
             
- const maps = {
+            // --- POPUP SCRIPT ---
+            togglePlaceListButton.addEventListener('click', function() {
+                placeListPopup.classList.toggle('visible');
+            });
+
+            closePopupButton.addEventListener('click', function() {
+                placeListPopup.classList.remove('visible');
+                mapDropdown.classList.remove('show'); // Also close dropdown if open
+            });
+
+            // Optional: Close popup when clicking outside of it
+            // window.addEventListener('click', function(event) {
+            //     if (placeListPopup.classList.contains('visible') && !placeListPopup.contains(event.target) && !togglePlaceListButton.contains(event.target)) {
+            //         placeListPopup.classList.remove('visible');
+            //         mapDropdown.classList.remove('show');
+            //     }
+            // });
+
+
+            const maps = {
                 sl_al: {
                     url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/001_2020_ලංකා-ඉතිහාසය-සිතියම2-01.jpg",
                     displayName: "උසස් පෙළ ලංකා සිතියම",
-                    places: [
-  {
-    "name": "අනුරාධපුරය",
-    "xPercent": 40.2,
-    "yPercent": 40.8,
-    "info": "ශ්‍රී ලංකාවේ මුල් ම අගනුවර වෙයි. පණ්ඩුකාභය රජු මෙහි පාලකයා ය. පස්වන මිහිඳු රජු චෝළයින්ගේ ග්‍රහණයට නතු වන තුරු වර්ෂ 1450ක් පමණ ලංකාවේ අගනුවර ලෙස පැවතුණි."
-  },
-  {
-    "name": "පොළොන්නරුව",
-    "xPercent": 58.3,
-    "yPercent": 50.4,
-    "info": "ශ්‍රී ලංකාවේ දෙවැනි අගනුවරයි. අනුරාධපුර යුගයේ අග එල්ල වූ චෝළ ආක්‍රමණ වලින් පසු ලංකාවේ උතුරු කොටසේ බලය අල්ලාගත් චෝලයෝ මෙය සිය මධ්‍යස්ථානය කරගත්හ.මෙය මධ්‍යස්ථානය කරගත් ලංකාවේ පළමු පාලකයා මහා විජයබාහු රජුය. පරාක්‍රම පාණ්ඩ්‍ය රජ දවස කාලිංගමාඝ මෙහි බලය අල්ලාගන්නා තුරු එය වසර 250ක් පමණ ලංකාවේ අගනුවර වශයෙන් පැවතුණි."
-  },
-  {
-    "name": "මහනුවර",
-    "xPercent": 45.7,
-    "yPercent": 63.5,
-    "info": "සෙංකඩගලපුර හෙවත් ලංකාවේ අවසන් රාජධානියයි. කෝට්ටේ හයවන බුවනෙකබාහු හෙවත් සපුමල්කුමාරයා බලයේ සිටි කාලයේ සේනාසම්මත වික්‍රමබාහු රජු සෙංකඩගල රාජධානිප පිහිටුවී ය. 1815 දී ශ්‍රී වික්‍රමරාජසිංහ රජු ඉංග්‍රීසීන්ගේ ග්‍රහණයට නතුවන තුරු එය වර්ෂ 400ක් පමණ කාලයක් ලංකාවේ අගනුර වශයෙන් පැවතියේ ය. "
-  },
-  {
-    "name": "යාපනය",
-    "xPercent": 31.8,
-    "yPercent": 12.8,
-    "info": "ලංකාවේ තවත් ප්‍රාදේශීය රාජධානියක ප්‍රමුඛ නගරය යි.මෙහි ආරම්භය පිළිබඳ නිශ්චිත කාලවකවානු සඳහන් නැතත්, 1619දී පිලිප් ද ඔලිවේරා නම් පෘතුගීසි කපිතාත් මේජර්වරයා විසින් යටත් කරගන්නා තුරු එය ප්‍රාදේශීය රාජධානියක් වශයෙන් පැවතියේ ය.මෙහි වැඩි ම කාලයක් බලයේ සිටියේ ආර්යචක්‍රවර්තී පරපුරයි"
-  },
-  {
-    "name": "ගාල්ල",
-    "xPercent": 30.9,
-    "yPercent": 89.2,
-    "info": "ලංකාවේ දකුණු වෙරළාශ්‍රිත පැරණි වරායකි. ගම්පොළ යුගයේ දී චීන සෙන්පති චෙංහෝගේ පැමිණීමට අදාළ සාධකයක් වන ත්‍රිභාෂා සෙල්ලිපිය මේ අසල තිබී හමු වී තිබේ."
-  },
-  {
-    "name": "තිස්සමහාරාමය",
-    "xPercent": 64.8,
-    "yPercent": 84.9,
-    "info": "ලංකාවේ දකුණු පළාත්බදව ඇති ඓතිහාසික නගරයකි. වඩාත් ප්‍රකට වී ඇත්තේ ආගමික අංශයෙනි.මෙය පැරණි මාගම හෙවත් කාවන්තිස්ස රජුගේ අගනුවර සීමාවට අයත් ස්ථානයක් වශයෙන් හඳුනාගෙන ඇත."
-  },
-  {
-    "name": "සීගිරිය",
-    "xPercent": 50.3,
-    "yPercent": 50.3,
-    "info": "අනුරාධපුර යුගයේ එක් පාලන මධ්‍යස්ථානයකි. ගිරි බලකාටුවක් හෝ රාජකීය විනෝද උයනකි.පළමු කාශ්‍යප රජු මේ නිර්මාණයේ හිමිකරු විය හැක. නමුත් ධාතුසේන රජසමයේ මෙහි ඉදිකිරීම් ඇරඹී යයි ද මතයකි."
-  },
-  {
-    "name": "දඹකොළපටුන", 
-    "xPercent": 30.2, 
-    "yPercent": 9.7,
-    "info": "ජම්බුකෝළපට්ටනය හෙවත් වත්මන් සම්බිලිතුරෙයි. මෙය ලංකාවේ පැරණි තොටුපළකි. නමුත් වාණිජ වරායක් නොවී ය. ශ්‍රී මහාබෝධිය වැඩමවීම මේ ඔස්සේ සිදු වූයෙන් ඉතිහාස ගතවිය. ඉතිහාසයේ මේ ස්ථානය ගැන සඳහන් වස්සේ අවස්ථා කිහිපයක දී පමණි."
-  },
-  { "name": "පේදුරුතුඩුව", "xPercent": 38.1, "yPercent": 9.5, "info": "" },
-  { "name": "කන්කසන්තුරේ", "xPercent": 29.6, "yPercent": 9.9, "info": "" },
-  { "name": "සූකරතිත්ථ(ඌරාතොට)", "xPercent": 27.6, "yPercent": 12.2, "info": "" },
-  { "name": "හැමන්හිල්", "xPercent": 27.7, "yPercent": 10.0, "info": "" },
-  { "name": "නල්ලූර්", "xPercent": 32.4, "yPercent": 12.3, "info": "" },
-  { "name": "අලිමංකඩ", "xPercent": 42.1, "yPercent": 15.4, "info": "" },
-  { "name": "කන්දරෝඩය", "xPercent": 30.9, "yPercent": 11.2, "info": "" },
-  { "name": "පාචීනාරාමය", "xPercent": 34.2, "yPercent": 9.9, "info": "" },
-  { "name": "වැල්වැටිතුරෙයි", "xPercent": 35.8, "yPercent": 9.5, "info": "" },
-  { "name": "පියංගුදීප", "xPercent": 25.9, "yPercent": 14.1, "info": "" },
-  { "name": "ඉරණමඩුව", "xPercent": 41.7, "yPercent": 19.5, "info": "" },
-  { "name": "ඉරණමඩු වැව", "xPercent": 43.8, "yPercent": 20.4, "info": "" },
-  { "name": "කුරුන්දි", "xPercent": 51.3, "yPercent": 22.0, "info": "" },
-  { "name": "මුලතිව්", "xPercent": 54.6, "yPercent": 21.7, "info": "" },
-  { "name": "මීපාතොට", "xPercent": 32.9, "yPercent": 23.5, "info": "" }
-]
-},
-                india_al: {
-                    url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/IND-with-MB_2019a-scaled.jpg",
-                    displayName: "උසස් පෙළ ඉන්දියා සිතියම",
-                    places: [ { "name": "බොම්බාය", "xPercent": 30.8, "yPercent": 61.3, "info": "මුම්බායි නගරය ඉන්දියාවේ ප්‍රධාන වාණිජ හා මූල්‍ය මධ්‍යස්ථානය වෙයි. එය මුලින් පෘතුගීසීන් විසින් පාලනය කරන ලදි." }, { "name": "කල්කටා", "xPercent": 74.1, "yPercent": 52.3, "info": " " }, { "name": "බරණැස්(වාරාණසි)", "xPercent": 57.6, "yPercent": 46.5, "info": "ගංගා නදිය අසල පිහිටි මෙම ඓතිහාසික නගරය හින්දු ආගමික කටයුතු සඳහා වැදගත් මධ්‍යස්ථානයක් ලෙස පවතී." }, { "name": "පාටලිපුත්‍ර(පැට්නා)", "xPercent": 63.5, "yPercent": 44.9, "info": "මෞර්ය අධිරාජ්‍යයේ අගනුවර වූ මෙම නගරය අශෝක අධිරාජයාගේ පාලන කාලයේදී විශේෂ වැදගත්කමක් දැරීය." }, ]
-                },
-                europe_al: {
-                    url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/web_Europe-01-scaled.jpg",
-                    displayName: "උසස් පෙළ යුරෝපා සිතියම",
-                    places: [ { "name": "ලන්ඩන්", "xPercent": 26.3, "yPercent": 46.2, "info": "බ්‍රිතාන්‍ය අධිරාජ්‍යයේ අගනුවර ලෙස ලන්ඩනය ලෝක ඉතිහාසයේ වැදගත් වෙයි. එය තේම්ස් ගංඟාව අසල පිහිටා ඇත." }, { "name": "පැරිස්", "xPercent": 26.5, "yPercent": 53.0, "info": "ප්‍රංශ අධිරාජ්‍යයේ අගනුවර ලෙස සහ යුරෝපීය නැවෝදයේ වැදගත් මධ්‍යස්ථානයක් වූ පැරිස් නගරය ලෝක ඉතිහාසයට බෙහෙවින් බලපෑවේය." }, { "name": "රෝමය", "xPercent": 36.4, "yPercent": 76.0, "info": "රෝම අධිරාජ්‍යයේ අගනුවර වූ රෝමය ලෝක ඉතිහාසයේ වැදගත්ම නගරයක් ලෙස සැලකේ. පාප්වරුන්ගේ බලකොටුව ද මෙහි පිහිටා ඇත." }, { "name": "බර්ලින්", "xPercent": 38.3, "yPercent": 50.5, "info": "ජර්මනියේ අගනුවර වන බර්ලින් නගරය දෙවන ලෝක යුද්ධය අවසානයේ සීතල යුද්ධයේ කේන්ද්‍රස්ථානයක් විය." } ]
-                },
-                sl_ol: {
-                    url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/web-සා-පෙළ-ලංකා-01.jpg",
-                    displayName: "සාමාන්‍ය පෙළ ලංකා සිතියම", 
-                    places: [ { "name": "අනුරාධපුරය", "xPercent": 37.9, "yPercent": 41.6, "info": "ශ්‍රී ලංකාවේ පළමු අගනුවර. වසර 1400 කට වැඩි කාලයක් අගනුවර ලෙස පැවතුණි." }, { "name": "මහනුවර", "xPercent": 45.5, "yPercent": 67.0, "info": "ශ්‍රී ලංකාවේ අවසාන ස්වාධීන රාජධානිය. 1815 දී බ්‍රිතාන්‍යයන්ට යටත් විය." }, { "name": "පොළොන්නරුව", "xPercent": 57.3, "yPercent": 52.3, "info": "දෙවන මහා නගරය ලෙස වසර 250ක පමණ කාලයක් පැවතුණි." } ]
-                },
-                eurasia_ol: {
-                    url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/web-Eurasia-map-01.jpg",
-                    displayName: "සාමාන්‍ය පෙළ යුරේසියා සිතියම",
-                    places: [ { "name": "රෝමය", "xPercent": 19.7, "yPercent": 49.2, "info": "රෝම අධිරාජ්‍යයේ අගනුවර වූ රෝමය ලෝක ඉතිහාසයේ වැදගත්ම නගරයක් ලෙස සැලකේ. පාප්වරුන්ගේ බලකොටුව ද මෙහි පිහිටා ඇත." }, { "name": "මොස්කව්", "xPercent": 31.8, "yPercent": 34.1, "info": "රුසියාවේ අගනුවර වන මොස්කව් නගරය, සෝවියට් සංගමයේ කේන්ද්‍රස්ථානය ලෙස තිබුණි." }, { "name": "බීජිං", "xPercent": 68.4, "yPercent": 50.6, "info": "චීනයේ අගනුවර වන බීජිං නගරය, පැරණි චීන අධිරාජ්‍යයේ කේන්ද්‍රස්ථානයකි." }, { "name": "ටෝකියෝ", "xPercent": 80.0, "yPercent": 53.4, "info": "ජපානයේ අගනුවර වන ටෝකියෝ නගරය, මෙයිජි යුගයේ සිට ජපානයේ ආර්ථික හා දේශපාලන කේන්ද්‍රස්ථානය වේ." } ]
-                }
+                    places: [ { "name": "අනුරාධපුරය", "xPercent": 40.2, "yPercent": 40.8, "info": "ශ්‍රී ලංකාවේ මුල් ම අගනුවර වෙයි. පණ්ඩුකාභය රජු මෙහි පාලකයා ය. පස්වන මිහිඳු රජු චෝළයින්ගේ ග්‍රහණයට නතු වන තුරු වර්ෂ 1450ක් පමණ ලංකාවේ අගනුවර ලෙස පැවතුණි." }, { "name": "පොළොන්නරුව", "xPercent": 58.3, "yPercent": 50.4, "info": "ශ්‍රී ලංකාවේ දෙවැනි අගනුවරයි. අනුරාධපුර යුගයේ අග එල්ල වූ චෝළ ආක්‍රමණ වලින් පසු ලංකාවේ උතුරු කොටසේ බලය අල්ලාගත් චෝලයෝ මෙය සිය මධ්‍යස්ථානය කරගත්හ.මෙය මධ්‍යස්ථානය කරගත් ලංකාවේ පළමු පාලකයා මහා විජයබාහු රජුය. පරාක්‍රම පාණ්ඩ්‍ය රජ දවස කාලිංගමාඝ මෙහි බලය අල්ලාගන්නා තුරු එය වසර 250ක් පමණ ලංකාවේ අගනුවර වශයෙන් පැවතුණි." }, { "name": "මහනුවර", "xPercent": 45.7, "yPercent": 63.5, "info": "සෙංකඩගලපුර හෙවත් ලංකාවේ අවසන් රාජධානියයි. කෝට්ටේ හයවන බුවනෙකබාහු හෙවත් සපුමල්කුමාරයා බලයේ සිටි කාලයේ සේනාසම්මත වික්‍රමබාහු රජු සෙංකඩගල රාජධානිප පිහිටුවී ය. 1815 දී ශ්‍රී වික්‍රමරාජසිංහ රජු ඉංග්‍රීසීන්ගේ ග්‍රහණයට නතුවන තුරු එය වර්ෂ 400ක් පමණ කාලයක් ලංකාවේ අගනුර වශයෙන් පැවතියේ ය. " }, { "name": "යාපනය", "xPercent": 31.8, "yPercent": 12.8, "info": "ලංකාවේ තවත් ප්‍රාදේශීය රාජධානියක ප්‍රමුඛ නගරය යි.මෙහි ආරම්භය පිළිබඳ නිශ්චිත කාලවකවානු සඳහන් නැතත්, 1619දී පිලිප් ද ඔලිවේරා නම් පෘතුගීසි කපිතාත් මේජර්වරයා විසින් යටත් කරගන්නා තුරු එය ප්‍රාදේශීය රාජධානියක් වශයෙන් පැවතියේ ය.මෙහි වැඩි ම කාලයක් බලයේ සිටියේ ආර්යචක්‍රවර්තී පරපුරයි" }, { "name": "ගාල්ල", "xPercent": 30.9, "yPercent": 89.2, "info": "ලංකාවේ දකුණු වෙරළාශ්‍රිත පැරණි වරායකි. ගම්පොළ යුගයේ දී චීන සෙන්පති චෙංහෝගේ පැමිණීමට අදාළ සාධකයක් වන ත්‍රිභාෂා සෙල්ලිපිය මේ අසල තිබී හමු වී තිබේ." }, { "name": "තිස්සමහාරාමය", "xPercent": 64.8, "yPercent": 84.9, "info": "ලංකාවේ දකුණු පළාත්බදව ඇති ඓතිහාසික නගරයකි. වඩාත් ප්‍රකට වී ඇත්තේ ආගමික අංශයෙනි.මෙය පැරණි මාගම හෙවත් කාවන්තිස්ස රජුගේ අගනුවර සීමාවට අයත් ස්ථානයක් වශයෙන් හඳුනාගෙන ඇත." }, { "name": "සීගිරිය", "xPercent": 50.3, "yPercent": 50.3, "info": "අනුරාධපුර යුගයේ එක් පාලන මධ්‍යස්ථානයකි. ගිරි බලකාටුවක් හෝ රාජකීය විනෝද උයනකි.පළමු කාශ්‍යප රජු මේ නිර්මාණයේ හිමිකරු විය හැක. නමුත් ධාතුසේන රජසමයේ මෙහි ඉදිකිරීම් ඇරඹී යයි ද මතයකි." }, { "name": "දඹකොළපටුන", "xPercent": 30.2, "yPercent": 9.7, "info": "ජම්බුකෝළපට්ටනය හෙවත් වත්මන් සම්බිලිතුරෙයි. මෙය ලංකාවේ පැරණි තොටුපළකි. නමුත් වාණිජ වරායක් නොවී ය. ශ්‍රී මහාබෝධිය වැඩමවීම මේ ඔස්සේ සිදු වූයෙන් ඉතිහාස ගතවිය. ඉතිහාසයේ මේ ස්ථානය ගැන සඳහන් වස්සේ අවස්ථා කිහිපයක දී පමණි." }, { "name": "පේදුරුතුඩුව", "xPercent": 38.1, "yPercent": 9.5, "info": "" }, { "name": "කන්කසන්තුරේ", "xPercent": 29.6, "yPercent": 9.9, "info": "" }, { "name": "සූකරතිත්ථ(ඌරාතොට)", "xPercent": 27.6, "yPercent": 12.2, "info": "" }, { "name": "හැමන්හිල්", "xPercent": 27.7, "yPercent": 10.0, "info": "" }, { "name": "නල්ලූර්", "xPercent": 32.4, "yPercent": 12.3, "info": "" }, { "name": "අලිමංකඩ", "xPercent": 42.1, "yPercent": 15.4, "info": "" }, { "name": "කන්දරෝඩය", "xPercent": 30.9, "yPercent": 11.2, "info": "" }, { "name": "පාචීනාරාමය", "xPercent": 34.2, "yPercent": 9.9, "info": "" }, { "name": "වැල්වැටිතුරෙයි", "xPercent": 35.8, "yPercent": 9.5, "info": "" }, { "name": "පියංගුදීප", "xPercent": 25.9, "yPercent": 14.1, "info": "" }, { "name": "ඉරණමඩුව", "xPercent": 41.7, "yPercent": 19.5, "info": "" }, { "name": "ඉරණමඩු වැව", "xPercent": 43.8, "yPercent": 20.4, "info": "" }, { "name": "කුරුන්දි", "xPercent": 51.3, "yPercent": 22.0, "info": "" }, { "name": "මුලතිව්", "xPercent": 54.6, "yPercent": 21.7, "info": "" }, { "name": "මීපාතොට", "xPercent": 32.9, "yPercent": 23.5, "info": "" } ] },
+                india_al: { url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/IND-with-MB_2019a-scaled.jpg", displayName: "උසස් පෙළ ඉන්දියා සිතියම", places: [ { name: "බොම්බාය", xPercent: 30.8, yPercent: 61.3, info: "මුම්බායි නගරය ඉන්දියාවේ ප්‍රධාන වාණිජ හා මූල්‍ය මධ්‍යස්ථානය වෙයි. එය මුලින් පෘතුගීසීන් විසින් පාලනය කරන ලදි." }, { name: "කල්කටා", xPercent: 74.1, yPercent: 52.3, info: " " }, { name: "බරණැස්(වාරාණසි)", xPercent: 57.6, yPercent: 46.5, info: "ගංගා නදිය අසල පිහිටි මෙම ඓතිහාසික නගරය හින්දු ආගමික කටයුතු සඳහා වැදගත් මධ්‍යස්ථානයක් ලෙස පවතී." }, { name: "පාටලිපුත්‍ර(පැට්නා)", xPercent: 63.5, yPercent: 44.9, info: "මෞර්ය අධිරාජ්‍යයේ අගනුවර වූ මෙම නගරය අශෝක අධිරაජයාගේ පාලන කාලයේදී විශේෂ වැදගත්කමක් දැරීය." }, ] },
+                europe_al: { url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/web_Europe-01-scaled.jpg", displayName: "උසස් පෙළ යුරෝපා සිතියම", places: [ { name: "ලන්ඩන්", xPercent: 26.3, yPercent: 46.2, info: "බ්‍රිතාන්‍ය අධිරාජ්‍යයේ අගනුවර ලෙස ලන්ඩනය ලෝක ඉතිහාසයේ වැදගත් වෙයි. එය තේම්ස් ගංඟාව අසල පිහිටා ඇත." }, { name: "පැරිස්", xPercent: 26.5, yPercent: 53.0, info: "ප්‍රංශ අධිරාජ්‍යයේ අගනුවර ලෙස සහ යුරෝපීය නැවෝදයේ වැදගත් මධ්‍යස්ථානයක් වූ පැරිස් නගරය ලෝක ඉතිහාසයට බෙහෙවින් බලපෑවේය." }, { name: "රෝමය", xPercent: 36.4, yPercent: 76.0, info: "රෝම අධිරාජ්‍යයේ අගනුවර වූ රෝමය ලෝක ඉතිහාසයේ වැදගත්ම නගරයක් ලෙස සැලකේ. පාප්වරුන්ගේ බලකොටුව ද මෙහි පිහිටා ඇත." }, { name: "බර්ලින්", xPercent: 38.3, yPercent: 50.5, info: "ජර්මනියේ අගනුවර වන බර්ලින් නගරය දෙවන ලෝක යුද්ධය අවසානයේ සීතල යුද්ධයේ කේන්ද්‍රස්ථානයක් විය." } ] },
+                sl_ol: { url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/web-සා-පෙළ-ලංකා-01.jpg", displayName: "සාමාන්‍ය පෙළ ලංකා සිතියම", places: [ { name: "අනුරාධපුරය", xPercent: 37.9, yPercent: 41.6, info: "ශ්‍රී ලංකාවේ පළමු අගනුවර. වසර 1400 කට වැඩි කාලයක් අගනුවර ලෙස පැවතුණි." }, { name: "මහනුවර", xPercent: 45.5, yPercent: 67.0, info: "ශ්‍රී ලංකාවේ අවසාන ස්වාධීන රාජධානිය. 1815 දී බ්‍රිතාන්‍යයන්ට යටත් විය." }, { name: "පොළොන්නරුව", xPercent: 57.3, yPercent: 52.3, info: "දෙවන මහා නගරය ලෙස වසර 250ක පමණ කාලයක් පැවතුණි." } ] },
+                eurasia_ol: { url: "https://www.eduhelp.lk/wp-content/uploads/2025/05/web-Eurasia-map-01.jpg", displayName: "සාමාන්‍ය පෙළ යුරේසියා සිතියම", places: [ { name: "රෝමය", xPercent: 19.7, yPercent: 49.2, info: "රෝම අධිරාජ්‍යයේ අගනුවර වූ රෝමය ලෝක ඉතිහාසයේ වැදගත්ම නගරයක් ලෙස සැලකේ. පාප්වරුන්ගේ බලකොටුව ද මෙහි පිහිටා ඇත." }, { name: "මොස්කව්", xPercent: 31.8, yPercent: 34.1, info: "රුසියාවේ අගනුවර වන මොස්කව් නගරය, සෝවියට් සංගමයේ කේන්ද්‍රස්ථානය ලෙස තිබුණි." }, { name: "බීජිං", xPercent: 68.4, yPercent: 50.6, info: "චීනයේ අගනුවර වන බීජිං නගරය, පැරණි චීන අධිරාජ්‍යයේ කේන්ද්‍රස්ථානයකි." }, { name: "ටෝකියෝ", xPercent: 80.0, yPercent: 53.4, info: "ජපානයේ අගනුවර වන ටෝකියෝ නගරය, මෙයිජි යුගයේ සිට ජපානයේ ආර්ථික හා දේශපාලන කේන්ද්‍රස්ථානය වේ." } ] }
             };
             
             mapImage.src = maps[currentMapKey].url;
@@ -582,13 +422,14 @@
             };
 
             function displayPlaces(places) {
-                placesList.innerHTML = '';
+                placesListUL.innerHTML = ''; // Use placesListUL
                 places.sort((a, b) => a.name.localeCompare(b, 'si'));
+                
                 places.forEach(place => {
                     const listItem = document.createElement('li');
                     listItem.textContent = place.name;
                     listItem.addEventListener('click', function() {
-                        const allItems = placesList.querySelectorAll('li');
+                        const allItems = placesListUL.querySelectorAll('li'); // Use placesListUL
                         allItems.forEach(item => item.classList.remove('active'));
                         this.classList.add('active');
                         
@@ -599,22 +440,25 @@
                         centerMapOnPoint(xPos, yPos);
                         activePlace = place;
                         
-                        const placeListContainer = document.querySelector('.place-list');
-                        document.getElementById('alphabetButtons').style.display = 'none';
-                        document.getElementById('showAllButton').style.display = 'none';
+                        const placeListContentWrapper = placeListPopup.querySelector('.place-list-content-wrapper');
+                        
+                        // Hide alphabet buttons and showAll button within the popup
+                        placeListContentWrapper.querySelector('#alphabetButtons').style.display = 'none';
+                        placeListContentWrapper.querySelector('#showAllButton').style.display = 'none';
 
-                        if (!document.getElementById('backButton')) {
+                        // Add a "back" button to show all places again (within popup)
+                        if (!placeListContentWrapper.querySelector('#backButton')) {
                             const backButton = document.createElement('button');
                             backButton.id = 'backButton';
-                            backButton.className = 'show-all-button'; 
+                            backButton.className = 'show-all-button'; // Reusing class for styling
                             backButton.textContent = 'අකාරාදිය අනුව තෝරන්න';
                             backButton.addEventListener('click', function() {
-                                document.getElementById('alphabetButtons').style.display = 'flex';
-                                document.getElementById('showAllButton').style.display = 'block';
+                                placeListContentWrapper.querySelector('#alphabetButtons').style.display = 'flex';
+                                placeListContentWrapper.querySelector('#showAllButton').style.display = 'block';
                                 allItems.forEach(item => item.style.display = 'block');
                                 this.remove();
                             });
-                            placeListContainer.insertBefore(backButton, placesList);
+                            placeListContentWrapper.insertBefore(backButton, placesListUL); // Insert before the UL
                         }
                         
                         allItems.forEach(item => {
@@ -622,8 +466,11 @@
                                 item.style.display = 'none';
                             }
                         });
+                        // Auto-close popup after selecting a place
+                        placeListPopup.classList.remove('visible');
+                        mapDropdown.classList.remove('show'); 
                     });
-                    placesList.appendChild(listItem);
+                    placesListUL.appendChild(listItem); // Append to placesListUL
                 });
             }
 
@@ -661,31 +508,44 @@
             }
 
             function populatePlacesList(places) {
-                displayPlaces(places);
+                displayPlaces(places); // This will now populate into placesListUL within the popup
+                 // Ensure buttons are visible if no filter/selection is active
+                const placeListContentWrapper = placeListPopup.querySelector('.place-list-content-wrapper');
+                if (placeListContentWrapper) { // Check if popup structure is ready
+                    const backButton = placeListContentWrapper.querySelector('#backButton');
+                    if (backButton) backButton.remove(); // Remove back button if present
+                    placeListContentWrapper.querySelector('#alphabetButtons').style.display = 'flex';
+                    placeListContentWrapper.querySelector('#showAllButton').style.display = 'block';
+                }
             }
 
             function resetView() {
                 locationMarker.style.display = 'none';
                 locationRing.style.display = 'none';
                 tooltip.style.display = 'none';
-                infoContent.textContent = 'ස්ථානයක් තෝරන්න';
+                infoContent.textContent = 'ස්ථානයක් තෝරන්න'; // Reset info bar text
                 centerMapInView();
                 activePlace = null;
-                const allItems = placesList.querySelectorAll('li');
-                allItems.forEach(item => item.classList.remove('active'));
+                
+                // Reset list items if popup is open or next time it opens
+                const allItems = placesListUL.querySelectorAll('li');
+                allItems.forEach(item => {
+                    item.classList.remove('active');
+                    item.style.display = 'block'; // Ensure all items are visible again
+                });
+                
                 activeLetterFilter = null;
-                updateAlphabetButtonsState();
-                displayPlaces(maps[currentMapKey].places);
+                updateAlphabetButtonsState(); // This function itself uses `alphabetButtons`
+                populatePlacesList(maps[currentMapKey].places); // This repopulates and ensures correct button states
+                
+                // Optionally close popup on reset, or leave it as is
+                // placeListPopup.classList.remove('visible');
+                // mapDropdown.classList.remove('show');
             }
 
             function createAlphabetButtons() {
-                alphabetButtons.innerHTML = '';
-                const sinhalaAlphabet = [
-                    'අ', 'ආ', 'ඇ', 'ඈ', 'ඉ', 'ඊ', 'උ', 'ඌ', 'එ', 'ඒ', 'ඔ', 'ඕ',
-                    'ක', 'ඛ', 'ග', 'ඝ', 'ඞ', 'ච', 'ඡ', 'ජ', 'ඣ', 'ඤ', 'ට',
-                    'ඩ', 'ණ', 'ත', 'ථ', 'ද', 'ධ', 'න', 'ප', 'ඵ', 'බ', 'භ', 'ම',
-                    'ය', 'ර', 'ල', 'ව', 'ශ', 'ෂ', 'ස', 'හ', 'ළ'
-                ];
+                alphabetButtons.innerHTML = ''; // alphabetButtons is the div inside the popup
+                const sinhalaAlphabet = [ 'අ', 'ආ', 'ඇ', 'ඈ', 'ඉ', 'ඊ', 'උ', 'ඌ', 'එ', 'ඒ', 'ඔ', 'ඕ', 'ක', 'ඛ', 'ග', 'ඝ', 'ඞ', 'ච', 'ඡ', 'ජ', 'ඣ', 'ඤ', 'ට', 'ඩ', 'ණ', 'ත', 'ථ', 'ද', 'ධ', 'න', 'ප', 'ඵ', 'බ', 'භ', 'ම', 'ය', 'ර', 'ල', 'ව', 'ශ', 'ෂ', 'ස', 'හ', 'ළ' ];
                 const places = maps[currentMapKey].places;
                 const firstLetters = places.map(place => place.name.charAt(0));
                 
@@ -723,7 +583,7 @@
                 });
             }
 
-            mapSelectorHeader.addEventListener('click', function() {
+            mapSelectorHeader.addEventListener('click', function() { // For the dropdown inside popup
                 mapDropdown.classList.toggle('show');
             });
             
@@ -734,24 +594,38 @@
                     currentMapKey = mapKey;
                     currentMapName.textContent = maps[mapKey].displayName;
                     mapImage.src = maps[mapKey].url;
-                    resetView();
-                    createAlphabetButtons();
+                    resetView(); // This will repopulate the list for the new map
+                    createAlphabetButtons(); // Recreate alphabet buttons for new map
                     mapDropdown.classList.remove('show');
+                    // Keep popup open to see the new list, or close it:
+                    // placeListPopup.classList.remove('visible'); 
                 });
             });
             
+            // Close map type dropdown when clicking outside of it (if it's open)
+            // This needs to be careful not to conflict with the main popup closing logic
             document.addEventListener('click', function(e) {
-                if (!mapSelectorHeader.contains(e.target) && !mapDropdown.contains(e.target)) {
+                 if (mapDropdown.classList.contains('show') && !mapSelectorHeader.contains(e.target) && !mapDropdown.contains(e.target)) {
                     mapDropdown.classList.remove('show');
                 }
+                // For closing main popup if clicking outside (already commented out above, can be enabled carefully)
+                // if (placeListPopup.classList.contains('visible') && 
+                //     !placeListPopup.contains(e.target) && 
+                //     !togglePlaceListButton.contains(e.target) &&
+                //     !mapSelectorHeader.contains(e.target) && // prevent closing if dropdown toggle is clicked
+                //     !mapDropdown.contains(e.target) // prevent closing if dropdown item is clicked
+                //     ) {
+                //     placeListPopup.classList.remove('visible');
+                // }
             });
+
 
             footerResetButton.addEventListener('click', resetView);
 
-            showAllButton.addEventListener('click', function() {
+            showAllButton.addEventListener('click', function() { // This button is inside the popup
                 activeLetterFilter = null;
                 updateAlphabetButtonsState();
-                displayPlaces(maps[currentMapKey].places);
+                populatePlacesList(maps[currentMapKey].places); // Repopulate within popup
             });
 
             mapContainer.addEventListener('mouseleave', function() {
